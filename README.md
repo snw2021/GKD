@@ -63,7 +63,7 @@ sudo python3 setup.py develop
 
 - You can evaluate the performance of our models or models trained by yourself.
 
-- Our models are at <https://github.com/megvii-research/mdistiller/releases/tag/checkpoints>, please download the checkpoints to `./download_ckpts`
+- The teacher models are at <https://github.com/megvii-research/mdistiller/releases/tag/checkpoints>, please download the checkpoints to `./download_ckpts`
 
 - If test the models on ImageNet, please download the dataset at <https://image-net.org/> and put them to `./data/imagenet`
 
@@ -84,11 +84,11 @@ sudo python3 setup.py develop
 - Download the `cifar_teachers.tar` at <https://github.com/megvii-research/mdistiller/releases/tag/checkpoints> and untar it to `./download_ckpts` via `tar xvf cifar_teachers.tar`.
 
   ```bash
-  # for instance, our DKD method.
-  python3 tools/train.py --cfg configs/cifar100/dkd/res32x4_res8x4.yaml
+  # for instance, GKD method.
+  python3 tools/train.py --cfg configs/cifar100/gkd/res32x4_res8x4.yaml
 
   # you can also change settings at command line
-  python3 tools/train.py --cfg configs/cifar100/dkd/res32x4_res8x4.yaml SOLVER.BATCH_SIZE 128 SOLVER.LR 0.1
+  python3 tools/train.py --cfg configs/cifar100/gkd/res32x4_res8x4.yaml SOLVER.BATCH_SIZE 128 SOLVER.LR 0.1
   ```
 
 3. Training on ImageNet
@@ -96,7 +96,7 @@ sudo python3 setup.py develop
 - Download the dataset at <https://image-net.org/> and put them to `./data/imagenet`
 
   ```bash
-  # for instance, our DKD method.
+  # for instance, GKD method.
   python3 tools/train.py --cfg configs/imagenet/r34_r18/dkd.yaml
   ```
 
