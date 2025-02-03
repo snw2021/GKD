@@ -8,6 +8,32 @@ Prior research on knowledge distillation has primarily focused on enhancing the 
 
 <div style="text-align:center"><img src=".github/gkd.png" width="70%" ></div> 
 
+### Main Benchmark Results
+
+On CIFAR-100:
+
+| Teacher <br> Student |ResNet56 <br> ResNet20|ResNet110 <br> ResNet32| ResNet32x4 <br> ResNet8x4| WRN-40-2 <br> WRN-16-2| WRN-40-2 <br> WRN-40-1 | VGG13 <br> VGG8|
+|:---------------:|:-----------------:|:-----------------:|:-----------------:|:------------------:|:------------------:|:--------------------:|
+| KD | 70.66 | 73.08 | 73.33 | 74.92 | 73.54 | 72.98 |
+| **KD+ours** | **72.10** | **73.85** | **74.88** | **75.26** | **74.33** | **73.84** |
+
+
+| Teacher <br> Student |ResNet32x4 <br> ShuffleNet-V1|WRN-40-2 <br> ShuffleNet-V1| VGG13 <br> MobileNet-V2| ResNet50 <br> MobileNet-V2| ResNet32x4 <br> MobileNet-V2|
+|:---------------:|:-----------------:|:-----------------:|:-----------------:|:------------------:|:------------------:|
+| KD | 74.07 | 74.83 | 67.37 | 67.35 | 74.45 |
+| **KD+ours** | **75.15** | **75.61** | **69.17** | **69.04** | **76.24** |
+
+On ImageNet:
+
+| Teacher <br> Student |ResNet34 <br> ResNet18|ResNet50 <br> MobileNet-V1|
+|:---------------:|:-----------------:|:-----------------:|
+| KD | 71.03 | 70.50 | 
+| KD+ours | 72.30 | 72.20 |
+| DKD | 71.70 | 72.05 | 
+| DKD+ours | 72.41 | 73.02 | 
+| DOT | 71.72 | 73.09 | 
+| DOT+ours | 72.35 | 74.08 | 
+
 ### Installation
 
 Environments:
