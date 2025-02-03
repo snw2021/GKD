@@ -4,7 +4,9 @@ This repository includes official implementation for the papers: Gradient Scalin
 # Gradient Scaling Knowledge Distillation (GKD)
 Prior research on knowledge distillation has primarily focused on enhancing the process through logits and feature-based approaches. In this paper, we present a novel gradient-based perspective on the learning dynamics of knowledge distillation, revealing a previously overlooked issue of **gradient insensitivity**. This issue arises when the varying confidence levels of the teacher's predictions are not adequately captured in the student's gradient updates, hindering the effective transfer of nuanced knowledge. To address this challenge, we propose **Gradient Scaling Knowledge Distillation (GKD)**, a method designed to mitigate gradient insensitivity by incorporating varying teacher confidence into the distillation procedure. Specifically, GKD adjusts the gradients of the student logits in accordance with the teacher confidence, introducing sample-specific adjustments that assign higher-weighted updates to the non-target classes of samples where the teacher exhibits greater confidence. Extensive experiments on CIFAR-100 and ImageNet demonstrate the superiority of our approach, particularly in heterogeneous teacher-student scenarios, achieving state-of-the-art performance on ImageNet. Moreover, GKD is versatile and can be effectively integrated with many logits distillation methods, providing a robust enhancement to existing methods. 🔗 **Code Repository**: [https://github.com/snw2021/GKD](https://github.com/snw2021/GKD)
 
+### Framework
 
+<div style="text-align:center"><img src=".github/gkd.png" width="80%" ></div>
 
 ### Installation
 
