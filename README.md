@@ -6,10 +6,9 @@ Prior research on knowledge distillation has primarily focused on enhancing the 
 
 ### Framework
 
-%<div style="text-align:center"><img src=".github/gkd.png" width="70%" ></div> 
 <p align="center">
-  <img src=".github/gkd.png" width="45%" />
-  <img src=".github/sigmoid.png" width="45%" />
+  <img src=".github/gkd.png" width="55%" />
+  <img src=".github/sigmoid.png" width="35%" />
 </p>
 
 ### Main Benchmark Results
