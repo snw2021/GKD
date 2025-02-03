@@ -10,7 +10,7 @@ class Distiller(nn.Module):
         self.teacher = teacher
 
     def train(self, mode=True):
-        # teacher as eval mode by default
+        # teacher as eval mode by default 默认教师是测试模式
         if not isinstance(mode, bool):
             raise ValueError("training mode is expected to be boolean")
         self.training = mode

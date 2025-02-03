@@ -1,10 +1,10 @@
 EXPERIMENT:
   NAME: ""
-  TAG: "kd,dot,res32x4,res8x4"
+  TAG: "gkd,dot,res32x4,res8x4"
   PROJECT: "dot_cifar"
 DISTILLER:
-  TYPE: "KD" 
-  TEACHER: "resnet32x4"  
+  TYPE: "GradientKD" 
+  TEACHER: "resnet32x4" 
   STUDENT: "resnet8x4" 
 SOLVER:
   BATCH_SIZE: 64
@@ -17,4 +17,4 @@ SOLVER:
   TYPE: "SGD"
   TRAINER: "dot"
   DOT:
-    DELTA: 0.075  
+    DELTA: 0.075 

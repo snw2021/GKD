@@ -24,10 +24,12 @@ def dot(params: List[Tensor],
         momentum_kd: float,
         lr: float,
         dampening: float):
+
     for i, param in enumerate(params):
         d_p = d_p_list[i]
         if weight_decay != 0:
             d_p = d_p.add(param, alpha=weight_decay)
+        #
         if momentum != 0:
             buf = momentum_buffer_list[i]
             if buf is None:
@@ -38,7 +40,7 @@ def dot(params: List[Tensor],
             else:
                 buf.mul_((momentum_kd + momentum) / 2.).add_(d_p, alpha=1 - dampening)
             d_p = buf
-        # update params with task-loss grad
+        #
         param.add_(d_p, alpha=-lr)
 
     for i, (d_p, buf, p) in enumerate(zip(kd_grad_buffer, kd_momentum_buffer, kd_params)):
@@ -66,7 +68,7 @@ class DistillationOrientedTrainer(Optimizer):
         optimizer.step_kd() # get kd-grad and update kd-momentum
         optimizer.zero_grad(set_to_none=True)
         loss_task.backward()
-        optimizer.step() # get task-grad and update tast-momentum, then update params.
+        optimizer.step() # get task-grad and update task-momentum, then update params.
         ...
     """
 
@@ -93,13 +95,14 @@ class DistillationOrientedTrainer(Optimizer):
         self.kd_momentum_buffer = []
         super(DistillationOrientedTrainer, self).__init__(params, defaults)
 
+    # kd
     @torch.no_grad()
     def step_kd(self, closure=None):
         loss = None
         if closure is not None:
             with torch.enable_grad():
                 loss = closure()
-        
+
         assert len(self.param_groups) == 1, "Only implement for one-group params."
         for group in self.param_groups:
             params_with_grad = []
@@ -108,7 +111,7 @@ class DistillationOrientedTrainer(Optimizer):
             weight_decay = group['weight_decay']
             dampening = group['dampening']
             lr = group['lr']
-            for p in group['params']:
+            for p in group['params']:  # len(group['params'])=32
                 if p.grad is not None:
                     params_with_grad.append(p)
                     d_p_list.append(p.grad)
@@ -117,12 +120,13 @@ class DistillationOrientedTrainer(Optimizer):
                         momentum_kd_buffer_list.append(None)
                     else:
                         momentum_kd_buffer_list.append(state['momentum_kd_buffer'])
-                    
+
         self.kd_momentum_buffer = momentum_kd_buffer_list
         self.kd_grad_buffer = d_p_list
         self.kd_grad_params = params_with_grad
         return loss        
 
+    # 任务更新
     @torch.no_grad()
     def step(self, closure=None):
         loss = None
@@ -153,14 +157,17 @@ class DistillationOrientedTrainer(Optimizer):
             dot(params_with_grad,
                 d_p_list,
                 momentum_buffer_list,
+
                 self.kd_grad_buffer,
                 self.kd_momentum_buffer,
                 self.kd_grad_params,
+
                 weight_decay=weight_decay,
                 momentum=momentum,
                 momentum_kd=momentum_kd,
                 lr=lr,
                 dampening=dampening)
+
             # update momentum_buffers in state
             for p, momentum_buffer in zip(params_with_grad, momentum_buffer_list):
                 state = self.state[p]

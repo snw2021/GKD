@@ -21,12 +21,12 @@ from .mv2_tinyimagenet import mobilenetv2_tinyimagenet
 
 cifar100_model_prefix = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 
-    "../../../download_ckpts/cifar_teachers/"
+    "download_ckpts/cifar_teachers/"
 )
 
 tiny_imagenet_model_prefix = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 
-    "../../../download_ckpts/tiny_imagenet_teachers/"
+    "download_ckpts/tiny_imagenet_teachers/"
 )
 
 cifar_model_dict = {

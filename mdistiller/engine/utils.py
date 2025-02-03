@@ -26,13 +26,15 @@ class AverageMeter(object):
         self.avg = self.sum / self.count
 
 
-def validate(val_loader, distiller):
+def validate(val_loader, distiller, distiller_student=None):
     batch_time, losses, top1, top5 = [AverageMeter() for _ in range(4)]
     criterion = nn.CrossEntropyLoss()
     num_iter = len(val_loader)
     pbar = tqdm(range(num_iter))
 
     distiller.eval()
+    # if distiller_student != None:
+    #     distiller_student.eval()
     with torch.no_grad():
         start_time = time.time()
         for idx, (image, target) in enumerate(val_loader):
@@ -40,6 +42,8 @@ def validate(val_loader, distiller):
             image = image.cuda(non_blocking=True)
             target = target.cuda(non_blocking=True)
             output = distiller(image=image)
+            # if distiller_student != None:
+            #     output_student = distiller_student(image=image)
             loss = criterion(output, target)
             acc1, acc5 = accuracy(output, target, topk=(1, 5))
             batch_size = image.size(0)

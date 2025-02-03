@@ -4,6 +4,14 @@ import torch.backends.cudnn as cudnn
 
 cudnn.benchmark = True
 
+import sys
+import os
+
+current_file_path = os.path.abspath(__file__)
+parent_directory = os.path.dirname(os.path.dirname(current_file_path))
+sys.path.append(parent_directory)
+
+
 from mdistiller.distillers import Vanilla
 from mdistiller.models import cifar_model_dict, imagenet_model_dict, tiny_imagenet_model_dict
 from mdistiller.dataset import get_dataset
@@ -14,8 +22,8 @@ from mdistiller.engine.cfg import CFG as cfg
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-m", "--model", type=str, default="")
-    parser.add_argument("-c", "--ckpt", type=str, default="pretrain")
+    parser.add_argument("-m", "--model", type=str, default="resnet8x4")
+    parser.add_argument("-c", "--ckpt", type=str, default="./output/cifar100_baselines/student_best") # "pretrain"
     parser.add_argument(
         "-d",
         "--dataset",

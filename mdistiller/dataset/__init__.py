@@ -1,4 +1,4 @@
-from .cifar100 import get_cifar100_dataloaders, get_cifar100_dataloaders_sample
+from .cifar100 import get_cifar100_dataloaders, get_cifar100_dataloaders_sample, get_cifar100_dataloaders_augment
 from .imagenet import get_imagenet_dataloaders, get_imagenet_dataloaders_sample
 from .tiny_imagenet import get_tinyimagenet_dataloader, get_tinyimagenet_dataloader_sample
 
@@ -54,3 +54,5 @@ def get_dataset(cfg):
         raise NotImplementedError(cfg.DATASET.TYPE)
 
     return train_loader, val_loader, num_data, num_classes
+
+

@@ -1,11 +1,17 @@
 import os
 import argparse
 import torch
-import torch.nn as nn
 import torch.backends.cudnn as cudnn
 
 cudnn.benchmark = True
 
+import sys
+
+current_file_path = os.path.abspath(__file__)
+parent_directory = os.path.dirname(os.path.dirname(current_file_path))
+sys.path.append(parent_directory)
+
+# model
 from mdistiller.models import cifar_model_dict, imagenet_model_dict, tiny_imagenet_model_dict
 from mdistiller.distillers import distiller_dict
 from mdistiller.dataset import get_dataset
@@ -30,6 +36,7 @@ def main(cfg, resume, opts):
             import wandb
 
             wandb.init(project=cfg.EXPERIMENT.PROJECT, name=experiment_name, tags=tags)
+
         except:
             print(log_msg("Failed to use WANDB", "INFO"))
             cfg.LOG.WANDB = False
@@ -39,19 +46,20 @@ def main(cfg, resume, opts):
     # init dataloader & models
     train_loader, val_loader, num_data, num_classes = get_dataset(cfg)
 
-    # vanilla
     if cfg.DISTILLER.TYPE == "NONE":
         if cfg.DATASET.TYPE == "imagenet":
             model_student = imagenet_model_dict[cfg.DISTILLER.STUDENT](pretrained=False)
         elif cfg.DATASET.TYPE == "tiny_imagenet":
             model_student = tiny_imagenet_model_dict[cfg.DISTILLER.STUDENT][0](num_classes=num_classes)
         else:
+            """cifar-100"""
             model_student = cifar_model_dict[cfg.DISTILLER.STUDENT][0](
                 num_classes=num_classes
             )
         distiller = distiller_dict[cfg.DISTILLER.TYPE](model_student)
     # distillation
     else:
+        # model
         print(log_msg("Loading teacher model", "INFO"))
         if cfg.DATASET.TYPE == "imagenet":
             model_teacher = imagenet_model_dict[cfg.DISTILLER.TEACHER](pretrained=True)
@@ -62,11 +70,18 @@ def main(cfg, resume, opts):
             assert (
                 pretrain_model_path is not None
             ), "no pretrain model for teacher {}".format(cfg.DISTILLER.TEACHER)
+            # teacher
             model_teacher = net(num_classes=num_classes)
             model_teacher.load_state_dict(load_checkpoint(pretrain_model_path)["model"])
+            # student
             model_student = model_dict[cfg.DISTILLER.STUDENT][0](
                 num_classes=num_classes
             )
+            # if cfg.LOG.WANDB:
+                # wandb.watch(model_student, log="all")
+                # wandb.watch(model_student, log="gradients", log_freq=1000, log_graph=False)
+
+        # distiller
         if cfg.DISTILLER.TYPE == "CRD":
             distiller = distiller_dict[cfg.DISTILLER.TYPE](
                 model_student, model_teacher, cfg, num_data
@@ -75,6 +90,7 @@ def main(cfg, resume, opts):
             distiller = distiller_dict[cfg.DISTILLER.TYPE](
                 model_student, model_teacher, cfg
             )
+
     distiller = torch.nn.DataParallel(distiller.cuda())
 
     if cfg.DISTILLER.TYPE != "NONE":
@@ -87,7 +103,6 @@ def main(cfg, resume, opts):
             )
         )
 
-    # train
     trainer = trainer_dict[cfg.SOLVER.TRAINER](
         experiment_name, distiller, train_loader, val_loader, cfg
     )
@@ -95,10 +110,11 @@ def main(cfg, resume, opts):
 
 
 if __name__ == "__main__":
-    import argparse
+
+    cfg_path = "configs/cifar100/gkd/res32x4_shuv1.yaml"
 
     parser = argparse.ArgumentParser("training for knowledge distillation.")
-    parser.add_argument("--cfg", type=str, default="")
+    parser.add_argument("--cfg", type=str, default=cfg_path)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("opts", default=None, nargs=argparse.REMAINDER)
 
