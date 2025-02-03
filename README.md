@@ -33,9 +33,9 @@ On ImageNet:
 | KD | 71.03 | 70.50 | 
 | KD+ours | 72.30 | 72.20 |
 | DKD | 71.70 | 72.05 | 
-| DKD+ours | 72.41 | 73.02 | 
+| DKD+ours | **72.41** | 73.02 | 
 | DOT | 71.72 | 73.09 | 
-| DOT+ours | 72.35 | 74.08 | 
+| DOT+ours | 72.35 | **74.08** | 
 
 Our trained models for imagenet dataset are available for download at <https://github.com/snw2021/GKD/releases/tag/checkpoints>
 
