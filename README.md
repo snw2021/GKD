@@ -6,7 +6,7 @@ Prior research on knowledge distillation has primarily focused on enhancing the 
 
 ### Framework
 
-<div style="text-align:right"><img src=".github/gkd.png" width="80%" ></div>
+<div style="text-align:right"><img src=".github/gkd.png" width="80%" ></div> 
 
 ### Installation
 
